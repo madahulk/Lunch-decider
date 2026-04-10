@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Globe, 
@@ -18,17 +18,22 @@ import {
   X
 } from 'lucide-react';
 import { meals } from './data/meals';
-import { Category, Cuisine, Meal } from './types';
+import { Category, Cuisine, Meal, MealType, MealTime, Budget } from './types';
 
-type View = 'home' | 'category' | 'cuisine' | 'list' | 'recipe';
+type View = 'home' | 'meal-type' | 'category-select' | 'list' | 'recipe';
 
 export default function App() {
   const [lang, setLang] = useState<'en' | 'ar'>('ar');
   const [view, setView] = useState<View>('home');
-  const [selectedCategory, setSelectedCategory] = useState<Category>('All');
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const [selectedCuisine, setSelectedCuisine] = useState<Cuisine | null>(null);
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const [mealType, setMealType] = useState<MealType | null>(null);
+  const [budget, setBudget] = useState<Budget | null>(null);
+
+  const [isVegExpanded, setIsVegExpanded] = useState(false);
 
   const isRTL = lang === 'ar';
 
@@ -47,6 +52,25 @@ export default function App() {
     ingredients: isRTL ? 'المكونات' : 'Ingredients',
     steps: isRTL ? 'طريقة التحضير' : 'Cooking Method',
     back: isRTL ? 'رجوع' : 'Back',
+    crave: isRTL ? 'نفسك في ايه؟' : 'What do you crave?',
+    meatType: isRTL ? 'نوع اللحم' : 'Meat Type',
+    riceType: isRTL ? 'نوع الارز' : 'Rice Type',
+    pastaType: isRTL ? 'نوع المكرونات' : 'Pasta Type',
+    vegType: isRTL ? 'نوع الخضار' : 'Vegetable Type',
+    soupType: isRTL ? 'نوع الشوربة' : 'Soup Type',
+    isSalad: isRTL ? 'هل سلطه' : 'Salad?',
+    isVeg: isRTL ? 'هل خضروات' : 'Vegetables?',
+    savory: isRTL ? 'حادق' : 'Savory',
+    sweet: isRTL ? 'حلو' : 'Sweet',
+    breakfast: isRTL ? 'فطار' : 'Breakfast',
+    lunch: isRTL ? 'غداء' : 'Lunch',
+    economic: isRTL ? 'اقتصادي' : 'Economic',
+    regular: isRTL ? 'عادي' : 'Regular',
+    medium: isRTL ? 'متوسط' : 'Medium',
+    economicFood: isRTL ? 'طعام اقتصادي' : 'Economic Food',
+    select: isRTL ? 'تحديد' : 'Select',
+    next: isRTL ? 'التالي' : 'Next',
+    or: isRTL ? 'أو' : 'OR',
     categories: {
       All: isRTL ? 'الكل' : 'All',
       Meat: isRTL ? 'لحوم' : 'Meat',
@@ -56,18 +80,23 @@ export default function App() {
       Pasta: isRTL ? 'مكرونات' : 'Pasta',
       'Light Meals': isRTL ? 'أكلات خفيفة' : 'Light Meals',
       Desserts: isRTL ? 'حلويات' : 'Desserts',
+      Rice: isRTL ? 'أرز' : 'Rice',
+      Soup: isRTL ? 'شوربة' : 'Soup',
+      Bread: isRTL ? 'عيش' : 'Bread',
     }
   };
 
   const filteredMeals = useMemo(() => {
     return meals.filter(meal => {
       const matchesCuisine = !selectedCuisine || meal.cuisine === selectedCuisine;
-      const matchesCategory = selectedCategory === 'All' || meal.category === selectedCategory;
+      const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(meal.category);
+      const matchesType = !mealType || meal.type === mealType;
+      const matchesBudget = !budget || meal.budget === budget;
       const matchesSearch = meal.name[lang].toLowerCase().includes(searchQuery.toLowerCase()) ||
                           meal.description[lang].toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCuisine && matchesCategory && matchesSearch;
+      return matchesCuisine && matchesCategory && matchesType && matchesBudget && matchesSearch;
     });
-  }, [selectedCuisine, selectedCategory, searchQuery, lang]);
+  }, [selectedCuisine, selectedCategories, mealType, budget, searchQuery, lang]);
 
   const handleMealClick = (meal: Meal) => {
     setSelectedMeal(meal);
@@ -76,10 +105,19 @@ export default function App() {
 
   const reset = () => {
     setView('home');
-    setSelectedCategory('All');
+    setSelectedCategories([]);
     setSelectedCuisine(null);
     setSelectedMeal(null);
     setSearchQuery('');
+    setMealType(null);
+    setBudget(null);
+    setIsVegExpanded(false);
+  };
+
+  const toggleCategory = (cat: Category) => {
+    setSelectedCategories(prev => 
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    );
   };
 
   return (
@@ -97,14 +135,23 @@ export default function App() {
         <Utensils className="absolute top-1/2 left-10 w-10 h-10 text-white animate-float-delayed" />
       </div>
 
-      {/* Language Toggle */}
-      <button 
-        onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
-        className="fixed top-6 left-6 z-50 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 flex items-center gap-2 border border-white/30 shadow-lg"
-      >
-        <Globe size={20} />
-        <span className="text-sm font-bold uppercase">{lang === 'en' ? 'AR' : 'EN'}</span>
-      </button>
+      {/* Language Toggle & Home Button */}
+      <div className="fixed top-6 right-6 z-50 flex items-center gap-3">
+        <button 
+          onClick={reset}
+          title="Home"
+          className="bg-white/20 hover:bg-white/40 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 border border-white/30 shadow-lg"
+        >
+          <ArrowLeft size={20} className={isRTL ? 'rotate-180' : ''} />
+        </button>
+        <button 
+          onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
+          className="bg-white/20 hover:bg-white/40 backdrop-blur-md text-white px-4 py-2 rounded-full transition-all duration-300 flex items-center gap-2 border border-white/30 shadow-lg"
+        >
+          <Globe size={18} />
+          <span className="text-sm font-bold uppercase">{lang === 'en' ? 'English' : 'العربية'}</span>
+        </button>
+      </div>
 
       <AnimatePresence mode="wait">
         {view === 'home' && (
@@ -126,7 +173,7 @@ export default function App() {
             <motion.button
               whileHover={{ scale: 1.05, backgroundColor: '#333' }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setView('category')}
+              onClick={() => setView('meal-type')}
               className="bg-white text-vibrant-red px-12 py-4 rounded-full text-xl md:text-2xl font-bold shadow-2xl transition-colors duration-300 flex items-center gap-3"
             >
               {t.letsGo}
@@ -135,43 +182,153 @@ export default function App() {
           </motion.div>
         )}
 
-        {view === 'category' && (
+        {view === 'meal-type' && (
           <motion.div 
-            key="category"
+            key="meal-type"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="flex flex-col items-center justify-center min-h-screen p-6"
+          >
+            <div className="flex flex-col gap-6 w-full max-w-2xl">
+              <div className="flex flex-row gap-6">
+                <button 
+                  onClick={() => {
+                    setMealType('Savory');
+                  }}
+                  className={`flex-1 p-8 rounded-2xl text-2xl font-bold shadow-xl border-4 transition-all ${mealType === 'Savory' ? 'bg-gray-800 text-white border-white' : 'bg-white text-vibrant-red border-white hover:bg-gray-100'}`}
+                >
+                  {t.savory}
+                </button>
+                <button 
+                  onClick={() => {
+                    setMealType('Sweet');
+                    setSelectedCategories(['Desserts']);
+                    setView('list');
+                  }}
+                  className="flex-1 bg-white text-vibrant-red p-8 rounded-2xl text-2xl font-bold shadow-xl border-4 border-white hover:bg-gray-800 hover:text-white transition-all"
+                >
+                  {t.sweet}
+                </button>
+              </div>
+
+              {mealType === 'Savory' && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="flex flex-row gap-4 mt-8 w-full"
+                >
+                  <button 
+                    onClick={() => {
+                      setBudget('Economic');
+                      setView('category-select');
+                    }}
+                    className="flex-1 bg-white text-vibrant-red p-4 rounded-xl text-lg font-bold shadow-xl border-2 border-white hover:bg-gray-800 hover:text-white transition-all"
+                  >
+                    {t.economic}
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setBudget('Regular');
+                      setView('category-select');
+                    }}
+                    className="flex-1 bg-white text-vibrant-red p-4 rounded-xl text-lg font-bold shadow-xl border-2 border-white hover:bg-gray-800 hover:text-white transition-all"
+                  >
+                    {t.regular}
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setBudget('Medium');
+                      setView('category-select');
+                    }}
+                    className="flex-1 bg-white text-vibrant-red p-4 rounded-xl text-lg font-bold shadow-xl border-2 border-white hover:bg-gray-800 hover:text-white transition-all"
+                  >
+                    {t.medium}
+                  </button>
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {view === 'category-select' && (
+          <motion.div 
+            key="category-select"
             initial={{ opacity: 0, x: isRTL ? -100 : 100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: isRTL ? 100 : -100 }}
             className="flex flex-col items-center justify-center min-h-screen p-6"
           >
-            <div className="w-full max-w-2xl bg-white/10 backdrop-blur-xl border-4 border-white p-8 rounded-[2rem] shadow-2xl">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-10 text-center uppercase tracking-widest">
-                {t.food}
+            <div className="w-full max-w-lg bg-white/10 backdrop-blur-xl border-4 border-white p-8 rounded-[2.5rem] shadow-2xl">
+              <h2 className="text-4xl font-bold text-white mb-8 text-center uppercase tracking-widest">
+                {budget === 'Economic' ? t.economicFood : t.food}
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {(Object.keys(t.categories) as Category[]).map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => {
-                      setSelectedCategory(cat);
-                      setView('cuisine');
-                    }}
-                    className="group relative overflow-hidden bg-white hover:bg-gray-800 text-vibrant-red hover:text-white p-6 transition-all duration-300 transform skew-x-[-12deg] rounded-lg shadow-lg border-2 border-transparent hover:border-white"
-                  >
-                    <div className="flex items-center justify-between skew-x-[12deg]">
-                      <span className="text-xl font-bold">{t.categories[cat]}</span>
-                      <div className="p-2 bg-vibrant-red/10 group-hover:bg-white/20 rounded-full">
-                        {cat === 'Meat' && <Beef size={24} />}
-                        {cat === 'Chicken' && <Bird size={24} />}
-                        {cat === 'Fish' && <Fish size={24} />}
-                        {cat === 'Vegetarian' && <Leaf size={24} />}
-                        {cat === 'Pasta' && <Pizza size={24} />}
-                        {cat === 'Light Meals' && <Coffee size={24} />}
-                        {cat === 'Desserts' && <Cake size={24} />}
-                        {cat === 'All' && <Utensils size={24} />}
-                      </div>
-                    </div>
-                  </button>
-                ))}
+
+              <div className="flex flex-col gap-4">
+                {budget === 'Economic' ? (
+                  <>
+                    <SelectableButton 
+                      label={t.categories.Rice} 
+                      selected={selectedCategories.includes('Rice')}
+                      onClick={() => toggleCategory('Rice')} 
+                    />
+                    <SelectableButton 
+                      label={t.categories.Soup} 
+                      selected={selectedCategories.includes('Soup')}
+                      onClick={() => toggleCategory('Soup')} 
+                    />
+                    <SelectableButton 
+                      label={t.categories.Bread} 
+                      selected={selectedCategories.includes('Bread')}
+                      onClick={() => toggleCategory('Bread')} 
+                    />
+                    <SelectableButton 
+                      label={t.categories.Pasta} 
+                      selected={selectedCategories.includes('Pasta')}
+                      onClick={() => toggleCategory('Pasta')} 
+                    />
+                  </>
+                ) : budget === 'Regular' ? (
+                  <>
+                    <SelectableButton 
+                      label={t.categories.Meat} 
+                      selected={selectedCategories.includes('Meat')}
+                      onClick={() => toggleCategory('Meat')} 
+                    />
+                    <SelectableButton 
+                      label={t.categories.Chicken} 
+                      selected={selectedCategories.includes('Chicken')}
+                      onClick={() => toggleCategory('Chicken')} 
+                    />
+                    <SelectableButton 
+                      label={t.categories.Fish} 
+                      selected={selectedCategories.includes('Fish')}
+                      onClick={() => toggleCategory('Fish')} 
+                    />
+                  </>
+                ) : (
+                  <>
+                    <SelectableButton 
+                      label={t.categories.Meat} 
+                      selected={selectedCategories.includes('Meat')}
+                      onClick={() => toggleCategory('Meat')} 
+                    />
+                    <SelectableButton 
+                      label={t.categories.Chicken} 
+                      selected={selectedCategories.includes('Chicken')}
+                      onClick={() => toggleCategory('Chicken')} 
+                    />
+                  </>
+                )}
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setView('list')}
+                  className="mt-8 bg-vibrant-red text-white p-4 rounded-xl font-bold text-xl shadow-lg border-2 border-white transition-all"
+                >
+                  {t.next}
+                </motion.button>
               </div>
             </div>
           </motion.div>
@@ -186,25 +343,27 @@ export default function App() {
             className="flex flex-col items-center justify-center min-h-screen p-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
-              <CuisineCard 
-                title={t.egyptian}
-                image="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=800"
+              <button 
                 onClick={() => {
                   setSelectedCuisine('Egyptian');
                   setView('list');
                 }}
-              />
-              <CuisineCard 
-                title={t.saudi}
-                image="https://images.unsplash.com/photo-1567337710282-00832b415979?auto=format&fit=crop&q=80&w=800"
+                className="bg-white text-vibrant-red p-12 rounded-[2.5rem] text-3xl md:text-4xl font-bold shadow-2xl border-4 border-white hover:bg-gray-800 hover:text-white transition-all duration-300"
+              >
+                {t.egyptian}
+              </button>
+              <button 
                 onClick={() => {
                   setSelectedCuisine('Saudi');
                   setView('list');
                 }}
-              />
+                className="bg-white text-vibrant-red p-12 rounded-[2.5rem] text-3xl md:text-4xl font-bold shadow-2xl border-4 border-white hover:bg-gray-800 hover:text-white transition-all duration-300"
+              >
+                {t.saudi}
+              </button>
             </div>
             <button 
-              onClick={() => setView('category')}
+              onClick={() => setView('category-select')}
               className="mt-12 text-white flex items-center gap-2 hover:underline font-bold text-lg"
             >
               {isRTL ? <ArrowRight size={20} /> : <ArrowLeft size={20} />}
@@ -224,7 +383,13 @@ export default function App() {
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
                 <button 
-                  onClick={() => setView('cuisine')}
+                  onClick={() => {
+                    if (mealType === 'Sweet') {
+                      setView('meal-type');
+                    } else {
+                      setView('category-select');
+                    }
+                  }}
                   className="bg-white/20 hover:bg-white/40 text-white p-4 rounded-full backdrop-blur-md transition-all"
                 >
                   {isRTL ? <ArrowRight size={24} /> : <ArrowLeft size={24} />}
@@ -322,6 +487,38 @@ export default function App() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function SelectableButton({ label, selected, onClick }: { label: string, selected: boolean, onClick: () => void }) {
+  return (
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className={`w-full p-4 rounded-2xl font-bold text-lg shadow-lg transition-all duration-300 flex items-center justify-between border-2 ${selected ? 'bg-gray-800 text-white border-white' : 'bg-white text-vibrant-red border-transparent hover:border-white'}`}
+    >
+      <span>{label}</span>
+      <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center ${selected ? 'bg-vibrant-red border-white' : 'border-vibrant-red/30'}`}>
+        {selected && <div className="w-2 h-2 bg-white rounded-full" />}
+      </div>
+    </motion.button>
+  );
+}
+
+function CategoryButton({ label, icon, onClick }: { label: string, icon: ReactNode, onClick: () => void }) {
+  return (
+    <motion.button
+      whileHover={{ scale: 1.02, backgroundColor: '#333' }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className="w-full bg-white text-vibrant-red hover:text-white p-4 rounded-2xl font-bold text-lg shadow-lg transition-all duration-300 flex items-center justify-between border-2 border-transparent hover:border-white"
+    >
+      <span>{label}</span>
+      <div className="p-2 bg-vibrant-red/10 rounded-full">
+        {icon}
+      </div>
+    </motion.button>
   );
 }
 

@@ -7,8 +7,11 @@ export const meals: Meal[] = [
     name: { en: 'Koshary', ar: 'كوشري' },
     description: { en: 'The national dish of Egypt, a mix of pasta, rice, lentils, and chickpeas.', ar: 'الطبق الوطني المصري، مزيج من المكرونة والأرز والعدس والحمص.' },
     image: 'https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=800',
-    category: 'Vegetarian',
+    category: 'Pasta',
     cuisine: 'Egyptian',
+    type: 'Savory',
+    time: 'Lunch',
+    budget: 'Economic',
     ingredients: {
       en: ['Rice', 'Lentils', 'Macaroni', 'Chickpeas', 'Tomato sauce', 'Fried onions', 'Garlic vinegar'],
       ar: ['أرز', 'عدس', 'مكرونة', 'حمص', 'صلصة طماطم', 'بصل مقلي', 'دقة ثوم']
@@ -19,12 +22,91 @@ export const meals: Meal[] = [
     }
   },
   {
+    id: 'eg-ads-1',
+    name: { en: 'Lentil Soup', ar: 'شوربة عدس' },
+    description: { en: 'A hearty and warming Egyptian lentil soup.', ar: 'شوربة عدس مصرية مشبعة ودافئة.' },
+    image: 'https://images.unsplash.com/photo-1547592115-030372079532?auto=format&fit=crop&q=80&w=800',
+    category: 'Soup',
+    cuisine: 'Egyptian',
+    type: 'Savory',
+    time: 'Lunch',
+    budget: 'Economic',
+    ingredients: {
+      en: ['Yellow lentils', 'Carrots', 'Onions', 'Garlic', 'Cumin', 'Bread for croutons'],
+      ar: ['عدس أصفر', 'جزر', 'بصل', 'ثوم', 'كمون', 'خبز للمحمص']
+    },
+    steps: {
+      en: ['Boil lentils with vegetables.', 'Blend until smooth.', 'Season with cumin and salt.', 'Serve with toasted bread.'],
+      ar: ['اسلق العدس مع الخضروات.', 'اضرب الخليط في الخلاط.', 'تبل بالكمون والملح.', 'قدمه مع الخبز المحمص.']
+    }
+  },
+  {
+    id: 'eg-ads-2',
+    name: { en: 'Foul Mudammas', ar: 'فول مدمس' },
+    description: { en: 'Slow-cooked fava beans, a staple Egyptian breakfast often served in bread.', ar: 'فول مدمس مطهو ببطء، وجبة مصرية أساسية تقدم غالباً في الخبز.' },
+    image: 'https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=800',
+    category: 'Bread',
+    cuisine: 'Egyptian',
+    type: 'Savory',
+    time: 'Breakfast',
+    budget: 'Economic',
+    ingredients: {
+      en: ['Fava beans', 'Lemon', 'Oil', 'Cumin', 'Salt', 'Bread'],
+      ar: ['فول', 'ليمون', 'زيت', 'كمون', 'ملح', 'عيش']
+    },
+    steps: {
+      en: ['Mash the beans.', 'Add oil, lemon, and spices.', 'Serve in fresh Egyptian bread.'],
+      ar: ['اهرس الفول.', 'أضف الزيت والليمون والبهارات.', 'قدمه في عيش بلدي طازج.']
+    }
+  },
+  {
+    id: 'eg-rice-1',
+    name: { en: 'Rice with Vermicelli', ar: 'أرز بالشعيرية' },
+    description: { en: 'Classic Egyptian white rice cooked with toasted vermicelli.', ar: 'أرز أبيض مصري كلاسيكي مطهو مع الشعيرية المحمرة.' },
+    image: 'https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&q=80&w=800',
+    category: 'Rice',
+    cuisine: 'Egyptian',
+    type: 'Savory',
+    time: 'Lunch',
+    budget: 'Economic',
+    ingredients: {
+      en: ['Short grain rice', 'Vermicelli', 'Butter/Oil', 'Salt', 'Water'],
+      ar: ['أرز مصري', 'شعيرية', 'سمن/زيت', 'ملح', 'ماء']
+    },
+    steps: {
+      en: ['Toast vermicelli in oil until golden.', 'Add rice and stir.', 'Add water and salt.', 'Cook on low heat until water is absorbed.'],
+      ar: ['حمر الشعيرية في الزيت حتى تصبح ذهبية.', 'أضف الأرز وقلب.', 'أضف الماء والملح.', 'اتركه على نار هادئة حتى يتشرب الماء.']
+    }
+  },
+  {
+    id: 'eg-pasta-1',
+    name: { en: 'Pasta with Red Sauce', ar: 'مكرونة بالصلصة' },
+    description: { en: 'Simple and delicious pasta with a rich Egyptian tomato sauce.', ar: 'مكرونة بسيطة ولذيذة مع صلصة الطماطم المصرية الغنية.' },
+    image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&q=80&w=800',
+    category: 'Pasta',
+    cuisine: 'Egyptian',
+    type: 'Savory',
+    time: 'Lunch',
+    budget: 'Economic',
+    ingredients: {
+      en: ['Pasta', 'Tomato juice', 'Garlic', 'Oil', 'Salt', 'Pepper'],
+      ar: ['مكرونة', 'عصير طماطم', 'ثوم', 'زيت', 'ملح', 'فلفل']
+    },
+    steps: {
+      en: ['Boil pasta.', 'Sauté garlic in oil.', 'Add tomato juice and simmer.', 'Mix pasta with sauce.'],
+      ar: ['اسلق المكرونة.', 'شوح الثوم في الزيت.', 'أضف عصير الطماطم واتركه يتسبك.', 'قلب المكرونة مع الصلصة.']
+    }
+  },
+  {
     id: 'eg-2',
     name: { en: 'Molokhia', ar: 'ملوخية' },
     description: { en: 'A nutritious green soup made from jute mallow leaves, served with rice or bread.', ar: 'شوربة خضراء مغذية مصنوعة من أوراق الملوخية، تقدم مع الأرز أو الخبز.' },
     image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800',
     category: 'Vegetarian',
     cuisine: 'Egyptian',
+    type: 'Savory',
+    time: 'Lunch',
+    budget: 'Regular',
     ingredients: {
       en: ['Molokhia leaves', 'Chicken broth', 'Garlic', 'Coriander', 'Butter'],
       ar: ['أوراق ملوخية', 'مرق دجاج', 'ثوم', 'كزبرة ناشفة', 'زبدة']
@@ -151,7 +233,7 @@ export const meals: Meal[] = [
     name: { en: 'Basmati Rice with Veggies', ar: 'ارز بسمتي بالخضار' },
     description: { en: 'Aromatic basmati rice cooked with mixed vegetables.', ar: 'أرز بسمتي عطري مطبوخ مع خضروات مشكلة.' },
     image: 'https://images.unsplash.com/photo-1512058560366-cd242959b4fe?auto=format&fit=crop&q=80&w=800',
-    category: 'Vegetarian',
+    category: 'Rice',
     cuisine: 'Egyptian',
     ingredients: {
       en: ['Basmati rice', 'Peas', 'Carrots', 'Turmeric', 'Cinnamon'],
@@ -183,7 +265,7 @@ export const meals: Meal[] = [
     name: { en: 'Orzo Soup', ar: 'شوربة لسان عصفور' },
     description: { en: 'A comforting soup made with orzo pasta and chicken broth.', ar: 'شوربة مريحة مصنوعة من مكرونة لسان العصفور ومرق الدجاج.' },
     image: 'https://images.unsplash.com/photo-1547592115-0307283503d4?auto=format&fit=crop&q=80&w=800',
-    category: 'Light Meals',
+    category: 'Soup',
     cuisine: 'Egyptian',
     ingredients: {
       en: ['Orzo pasta', 'Chicken broth', 'Butter', 'Salt', 'Pepper'],
@@ -329,7 +411,7 @@ export const meals: Meal[] = [
     name: { en: 'Kabsa', ar: 'كبسة' },
     description: { en: 'The most famous Saudi dish, rice with meat or chicken and spices.', ar: 'أشهر طبق سعودي، أرز مع اللحم أو الدجاج والبهارات.' },
     image: 'https://images.unsplash.com/photo-1567337710282-00832b415979?auto=format&fit=crop&q=80&w=800',
-    category: 'Meat',
+    category: 'Rice',
     cuisine: 'Saudi',
     ingredients: {
       en: ['Basmati rice', 'Lamb/Chicken', 'Kabsa spices', 'Dried lime', 'Saffron'],
@@ -345,7 +427,7 @@ export const meals: Meal[] = [
     name: { en: 'Mandi', ar: 'مندي' },
     description: { en: 'Traditional dish cooked in a tandoor with smoked flavor.', ar: 'طبق تقليدي يطبخ في التنور بنكهة التدخين.' },
     image: 'https://images.unsplash.com/photo-1512058560366-cd242959b4fe?auto=format&fit=crop&q=80&w=800',
-    category: 'Meat',
+    category: 'Rice',
     cuisine: 'Saudi',
     ingredients: {
       en: ['Rice', 'Lamb', 'Mandi spices', 'Charcoal for smoking'],
@@ -489,7 +571,7 @@ export const meals: Meal[] = [
     name: { en: 'Lentil Soup', ar: 'شوربة عدس' },
     description: { en: 'Warm and hearty yellow lentil soup.', ar: 'شوربة عدس أصفر دافئة ومغذية.' },
     image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=800',
-    category: 'Light Meals',
+    category: 'Soup',
     cuisine: 'Saudi',
     ingredients: {
       en: ['Yellow lentils', 'Onions', 'Carrots', 'Cumin'],
@@ -643,5 +725,55 @@ export const meals: Meal[] = [
       en: ['Cook meat and vegetables.', 'Soak bread in the stew.'],
       ar: ['اطبخ اللحم والخضروات.', 'اسقِ الخبز بالمرق.']
     }
+  },
+  {
+    id: 'eg-br-1',
+    name: { en: 'Ful Medames', ar: 'فول مدمس' },
+    description: { en: 'Slow-cooked fava beans with oil and spices.', ar: 'فول مدمس مطهو ببطء مع الزيت والبهارات.' },
+    image: 'https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=800',
+    category: 'Breakfast',
+    cuisine: 'Egyptian',
+    type: 'Savory',
+    time: 'Breakfast',
+    budget: 'Economic',
+    ingredients: { en: ['Fava beans', 'Oil', 'Cumin'], ar: ['فول', 'زيت', 'كمون'] },
+    steps: { en: ['Mash beans', 'Add oil and spices'], ar: ['اهرس الفول', 'أضف الزيت والبهارات'] }
+  },
+  {
+    id: 'eg-de-1',
+    name: { en: 'Om Ali', ar: 'أم علي' },
+    description: { en: 'Bread pudding with milk and nuts.', ar: 'حلوى أم علي بالحليب والمكسرات.' },
+    image: 'https://images.unsplash.com/photo-1589113103503-49675c888c52?auto=format&fit=crop&q=80&w=800',
+    category: 'Desserts',
+    cuisine: 'Egyptian',
+    type: 'Sweet',
+    budget: 'Medium',
+    ingredients: { en: ['Pastry', 'Milk', 'Nuts'], ar: ['رقائق عجين', 'حليب', 'مكسرات'] },
+    steps: { en: ['Mix ingredients', 'Bake'], ar: ['اخلط المكونات', 'ادخلها الفرن'] }
+  },
+  {
+    id: 'sa-br-1',
+    name: { en: 'Shakshuka', ar: 'شكشوكة' },
+    description: { en: 'Eggs poached in a sauce of tomatoes and peppers.', ar: 'بيض مطبوخ في صلصة طماطم وفلفل.' },
+    image: 'https://images.unsplash.com/photo-1590412200988-a436bb7050a8?auto=format&fit=crop&q=80&w=800',
+    category: 'Breakfast',
+    cuisine: 'Saudi',
+    type: 'Savory',
+    time: 'Breakfast',
+    budget: 'Economic',
+    ingredients: { en: ['Eggs', 'Tomatoes', 'Peppers'], ar: ['بيض', 'طماطم', 'فلفل'] },
+    steps: { en: ['Sauté vegetables', 'Add eggs'], ar: ['شوح الخضار', 'أضف البيض'] }
+  },
+  {
+    id: 'sa-de-1',
+    name: { en: 'Masoub', ar: 'معصوب' },
+    description: { en: 'Banana and bread pudding with honey.', ar: 'حلوى الموز والخبز بالعسل.' },
+    image: 'https://images.unsplash.com/photo-1567337710282-00832b415979?auto=format&fit=crop&q=80&w=800',
+    category: 'Desserts',
+    cuisine: 'Saudi',
+    type: 'Sweet',
+    budget: 'Medium',
+    ingredients: { en: ['Bananas', 'Bread', 'Honey'], ar: ['موز', 'خبز', 'عسل'] },
+    steps: { en: ['Mash bananas', 'Mix with bread'], ar: ['اهرس الموز', 'اخلطه مع الخبز'] }
   }
 ];
